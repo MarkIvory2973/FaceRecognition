@@ -132,4 +132,4 @@ Datasets_Root/
 
 ## Result
 
-![The result of training]()
+![The result of training](https://raw.githubusercontent.com/MarkIvory2973/FaceRecognition/main/imgs/result.png)
