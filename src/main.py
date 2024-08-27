@@ -1,8 +1,6 @@
 from ResNet18 import *
 from ResNet18 import Network, Dataset
 
-VSC_root = "src"
-
 # 图片预处理
 transform_train = transforms.Compose([
     transforms.CenterCrop([178, 178]),                      # 1. 中心裁切 178x178
@@ -24,12 +22,12 @@ transform_getfaces = transforms.Compose([
 ])
 
 # 人脸数据集
-def FaceDataset(batch_size, total_batch, camera=0):
+def FaceDataset(camera_id, batch_size, total_batch):
     isCapture = False
     console.print("Press [bold yellow]y[/] to start capturing faces")
     
     # 获得相机句柄
-    camera = cv2.VideoCapture(camera)
+    camera = cv2.VideoCapture(camera_id)
     # 加载人脸检测模型
     classifer = cv2.CascadeClassifier("E:\Models\OpenCV\lbpcascades\lbpcascade_frontalface_improved.xml")
     
@@ -73,17 +71,17 @@ def FaceDataset(batch_size, total_batch, camera=0):
 def Log(text, end="\n"):
     console.print(text + " "*(os.get_terminal_size().columns-len(text)-1), end=end)
 
-def Train(total_epoch, learning_rate, batch_size):
+def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_size, gamma):
     # 加载 CelebA、LFW 数据集
-    faces_train = Dataset.Faces("E:/Datasets/CelebA_2", transform_train)
-    faces_test = Dataset.Faces("E:/Datasets/LFW_2", transform_test)
+    faces_train = Dataset.Faces(f"{datasets_root}/CelebA_2", transform_train)
+    faces_test = Dataset.Faces(f"{datasets_root}/LFW_2", transform_test)
     faces_train = DataLoader(faces_train, batch_size, True, pin_memory=True, drop_last=True, num_workers=os.cpu_count())
     faces_test = DataLoader(faces_test, batch_size, False, pin_memory=True, drop_last=True, num_workers=os.cpu_count())
 
     model = Network.ResNet18(128).to(device, non_blocking=True)             # ResNet18 模型
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)      # Adam 优化器
     criterion = torch.nn.TripletMarginLoss(3.0, reduction="sum")            # 三元损失
-    lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, 0.95)  # 自动学习率
+    lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma) # 自动学习率
 
     # 训练 total_epoch 次
     for epoch in range(total_epoch):
@@ -186,20 +184,20 @@ def Train(total_epoch, learning_rate, batch_size):
             "Optimizer": optimizer.state_dict(),        # 当前 优化器 参数
             "LR_Scheduler": lr_scheduler.state_dict()   # 当前 自动学习率 参数
         }
-        torch.save(checkpoint, f"E:/Models/PyTorch_FR/checkpoint.{epoch+1}.pth")
+        torch.save(checkpoint, f"{checkpoints_root}/checkpoint.{epoch+1}.pth")
         
         # 指标显示（损失值、准确率）
         Log(f"[{epoch+1}/{total_epoch}] AvgLossTrain: {avg_loss_train} AvgLossTest: {avg_loss_test} AccuracyTrain: {accuracy_train} AccuracyTest: {accuracy_test}")
 
 @torch.no_grad()
-def Register(username):
+def Register(camera_id, checkpoints_path, username):
     # 加载人脸数据
-    a_dataset = FaceDataset(8, 8)
+    a_dataset = FaceDataset(camera_id, 8, 8)
     
     model = Network.ResNet18(128).to(device, non_blocking=True)     # ResNet18 模型
     
     # 加载模型权重
-    model.load_state_dict(torch.load(f"E:/Models/PyTorch_FR/checkpoint.35.pth", device)["Model"])
+    model.load_state_dict(torch.load(f"{checkpoints_path}/checkpoint.35.pth", device)["Model"])
     
     # 测试
     model.eval()
@@ -211,24 +209,24 @@ def Register(username):
         a_dataset_out.append(a_batch_out)
             
     # 保存人脸向量
-    torch.save(a_dataset_out, f"{VSC_root}/Users/{username}.pt")
+    torch.save(a_dataset_out, f"Users/{username}.pt")
 
 @torch.no_grad()
-def Verify(username):
+def Verify(camera_id, datasets_root, checkpoints_path, username):
     # 加载人脸数据
-    p_dataset = FaceDataset(8, 8)
-    n_dataset = [torch.stack([transform_test(Image.open(negative_face)) for negative_face in random.choices(list(os.scandir("E:/Datasets/CelebA_1")), k=8)]) for _ in range(8)]
+    p_dataset = FaceDataset(camera_id, 8, 8)
+    n_dataset = [torch.stack([transform_test(Image.open(negative_face)) for negative_face in random.choices(list(os.scandir(f"{datasets_root}/CelebA_1")), k=8)]) for _ in range(8)]
     
     model = Network.ResNet18(128).to(device, non_blocking=True)     # ResNet18 模型
     criterion = torch.nn.TripletMarginLoss(0.0, reduction="sum")    # 三元损失
         
     # 加载模型权重
-    model.load_state_dict(torch.load(f"E:/Models/PyTorch_FR/checkpoint.35.pth", device)["Model"])
+    model.load_state_dict(torch.load(f"{checkpoints_path}/checkpoint.35.pth", device)["Model"])
     
     # 测试
     model.eval()
     # 前向传播
-    a_dataset_out = torch.load(f"{VSC_root}/Users/{username}.pt", device)
+    a_dataset_out = torch.load(f"Users/{username}.pt", device)
     p_dataset_out = [model(p_batch.to(device, non_blocking=True)) for p_batch in p_dataset]
     n_dataset_out = [model(n_batch.to(device, non_blocking=True)) for n_batch in n_dataset]
     losses = []
@@ -237,9 +235,36 @@ def Verify(username):
             for n_batch_out in n_dataset_out:
                     losses.append(criterion(a_batch_out, p_batch_out, n_batch_out).item())
             
-    return losses
+    console.print(not bool(torch.tensor(losses).median().item()))
+
+@group()
+def main():
+    pass
+
+@main.command()
+@option("--datasets-root", "-d", help="Datasets root")
+@option("--checkpoints-root", "-c", default="./checkpoints", help="Checkpoints root")
+@option("--total-epoch", "-e", default=50, help="Total epoch")
+@option("--learning-rate", "-r", default=0.01, help="Learning rate")
+@option("--batch-size", "-s", default=8, help="Batch size")
+@option("--gamma", "-g", default=0.95, help="The gamma of ExponentialLR")
+def train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_size, gamma):
+    Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_size, gamma)
+    
+@main.command()
+@option("--camera-id", "-i", default=0, help="Camera ID")
+@option("--checkpoints-path", "-c", default="./checkpoints", help="Checkpoints path")
+@option("--username", "-n", help="Username")
+def register(camera_id, checkpoints_path, username):
+    Register(camera_id, checkpoints_path, username)
+    
+@main.command()
+@option("--camera-id", "-i", default=0, help="Camera ID")
+@option("--datasets-root", "-d", help="Datasets root")
+@option("--checkpoints-path", "-c", default="./checkpoints", help="Checkpoints path")
+@option("--username", "-n", help="Username")
+def verify(camera_id, datasets_root, checkpoints_path, username):
+    Verify(camera_id, datasets_root, checkpoints_path, username)
 
 if __name__ == "__main__":
-    Train(50, 1e-2, 8)
-    Register("Admin")
-    console.print(Verify("Admin"))
+    main()

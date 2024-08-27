@@ -3,6 +3,7 @@ from torch.utils.data import DataLoader
 from torchvision import models, transforms
 from PIL import Image
 from pathlib import Path
+from click import group, command, option
 from rich.console import Console
 
 console = Console()
