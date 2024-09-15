@@ -49,9 +49,9 @@ import torch, os, cv2, random
 
 ```bash
 cd FaceRecognition
-python train -d E:/Datasets -c ./checkpoints -e 40 -r 0.02 -s 16 -g 0.94
-python register -i 0 -c ./checkpoints -n Guest01
-python verify -i 0 -d E:/Datasets -c ./checkpoints -n Guest01
+python src/main.py train -d E:/Datasets -c ./checkpoints -e 40 -r 0.02 -s 16 -g 0.94
+python src/main.py register -i 0 -c ./checkpoints -n Guest01
+python src/main.py verify -i 0 -d E:/Datasets -c ./checkpoints -n Guest01
 ```
 
 ## Parameters
