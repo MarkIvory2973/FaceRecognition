@@ -68,6 +68,7 @@ Train mode:
 |--gamma,-g|-|0.95|The gamma of ExponentialLR|
 
 Register mode:
+
 |Parameter|Required|Default|Description|
 |:-|:-:|:-|:-|
 |--camera-id,-i|-|0|Camera ID|
@@ -75,6 +76,7 @@ Register mode:
 |--username,-n|✓|-|Username|
 
 Verify mode:
+
 |Parameter|Required|Default|Description|
 |:-|:-:|:-|:-|
 |--camera-id,-i|-|0|Camera ID|
