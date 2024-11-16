@@ -76,9 +76,9 @@ Verify mode:
 |--checkpoints-path,-c|-|./checkpoints|Checkpoints path|
 |--username,-n|✓|-|Username|
 
-## Difference
+## Training
 
-I repeated the training of **the error set**(epoch & loss ≥ 10) on top of training the CelebA dataset.
+I trained 50 epochs using ResNet18 for backbone and repeated the training of **the error set**(epoch & loss ≥ 10) on top of training the CelebA dataset.
 
 ## Result
 
