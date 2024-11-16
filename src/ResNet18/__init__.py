@@ -1,4 +1,4 @@
-import torch, torch_directml, os, cv2, random
+import torch, torch_directml, pickle, os, cv2, random
 from torch.utils.data import DataLoader
 from torchvision import models, transforms
 from PIL import Image

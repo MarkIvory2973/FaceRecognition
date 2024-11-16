@@ -73,8 +73,8 @@ def Log(text, end="\n"):
 
 def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_size, gamma):
     # 加载 CelebA、LFW 数据集
-    faces_train = Dataset.Faces(f"{datasets_root}/CelebA_2", transform_train)
-    faces_test = Dataset.Faces(f"{datasets_root}/LFW_2", transform_test)
+    faces_train = Dataset.CelebA(f"{datasets_root}/CelebA", transform_train)
+    faces_test = Dataset.LFW(f"{datasets_root}/LFW_2", transform_test)
     faces_train = DataLoader(faces_train, batch_size, True, pin_memory=True, drop_last=True, num_workers=os.cpu_count())
     faces_test = DataLoader(faces_test, batch_size, False, pin_memory=True, drop_last=True, num_workers=os.cpu_count())
 
