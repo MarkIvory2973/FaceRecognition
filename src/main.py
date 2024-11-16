@@ -125,6 +125,7 @@ def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_siz
             Log(f"[{epoch+1}/{total_epoch} {step+1}/{len(faces_train)}] [Train CelebA] AvgLoss: {avg_loss_train} Loss: {loss} Accuracy: {accuracy_train}", "\r")
             
         # 训练错误集
+        random.shuffle(errors)
         for step, (anchor, positive, negative) in enumerate(errors):
             # 前向传播
             anchor_out = model(anchor.to(device, non_blocking=True))
