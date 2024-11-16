@@ -1,5 +1,21 @@
+import torch_directml, cv2, os
 from ResNet18 import *
 from ResNet18 import Network, Dataset
+from click import group, option
+from rich.console import Console
+
+console = Console()
+
+# CPU
+device = torch.device("cpu")
+
+# AMD GPU
+if torch_directml.is_available():
+    device = torch_directml.device()
+
+# NVIDIA GPU
+if torch.cuda.is_available():
+    device = torch.device("cuda")
 
 # 图片预处理
 transform_train = transforms.Compose([
