@@ -285,5 +285,4 @@ def verify(camera_id, datasets_root, checkpoints_path, username):
     Verify(camera_id, datasets_root, checkpoints_path, username)
 
 if __name__ == "__main__":
-    #main()
-    Train("E:/Datasets", "./checkpoints", 50, 0.01, 8, 0.95)
+    main()
