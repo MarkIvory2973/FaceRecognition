@@ -19,11 +19,12 @@ if torch.cuda.is_available():
 
 # 图片预处理
 transform_train = transforms.Compose([
-    transforms.CenterCrop([178, 178]),                      # 1. 中心裁切 178x178
+    transforms.RandomCrop([178, 178]),                      # 1. 随机裁切 178x178
     transforms.ColorJitter(0.5, 0.3, 0.2, 0.2),             # 2. 随机调整亮度、对比度、饱和度、色相
-    transforms.RandomRotation(10),                          # 3. 随机旋转图片 10°
-    transforms.ToTensor(),                                  # 4. 转换为 PyTorch 张量
-    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])  # 5. 批归一化
+    transforms.RandomHorizontalFlip(),                      # 3. 随机水平翻转
+    transforms.RandomRotation(45),                          # 4. 随机旋转图片 45°
+    transforms.ToTensor(),                                  # 5. 转换为 PyTorch 张量
+    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])  # 6. 批归一化
 ])
 transform_test = transforms.Compose([
     transforms.CenterCrop([178, 178]),                      # 1. 中心裁切 178x178
@@ -284,4 +285,5 @@ def verify(camera_id, datasets_root, checkpoints_path, username):
     Verify(camera_id, datasets_root, checkpoints_path, username)
 
 if __name__ == "__main__":
-    main()
+    #main()
+    Train("E:/Datasets", "./checkpoints", 50, 0.01, 8, 0.95)
