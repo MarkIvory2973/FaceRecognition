@@ -37,14 +37,6 @@ pip install opencv-python rich
 git clone https://github.com/MarkIvory2973/ProxyTest.git
 ```
 
-⚠ ***If you don't use AMD GPU:***
-
-```python
-# src/ResNet18/__init__.py
-#import torch, torch_directml, os, cv2, random
-import torch, os, cv2, random
-```
-
 ## Usage
 
 ```bash
@@ -84,54 +76,16 @@ Verify mode:
 |--checkpoints-path,-c|-|./checkpoints|Checkpoints path|
 |--username,-n|✓|-|Username|
 
-## The structure of datasets folder
+## Difference
 
-```bash
-Datasets_Root/
-├──CelebA_1/
-│  │──000001.jpg
-│  │──000002.jpg
-│  │──000003.jpg
-│  │  ...
-│  └──202599.jpg
-│──CelebA_2/
-│  │──1/
-│  │  │──000023.jpg
-│  │  │──004506.jpg
-│  │  │──006439.jpg
-│  │  │  ...
-│  │  └──157602.jpg
-│  │──2/
-│  │  │──016188.jpg
-│  │  │──051523.jpg
-│  │  │──068490.jpg
-│  │  │  ...
-│  │  └──155885.jpg
-│  │──3/
-│  │  │──003029.jpg
-│  │  │──003206.jpg
-│  │  │──008838.jpg
-│  │  │  ...
-│  │  └──161022.jpg
-│  │  ...
-│  └──10177/
-│     │──010230.jpg
-│     │──013391.jpg
-│     │──053390.jpg
-│     │  ...
-│     └──158603.jpg
-└──LFW_2/
-   │──Aaron_Eckhart/
-   │  └──Aaron_Eckhart_0001.jpg
-   │──Aaron_Guiel/
-   │  └──Aaron_Guiel_0001.jpg
-   │──Aaron_Patterson/
-   │  └──Aaron_Patterson_0001.jpg
-   │  ...
-   └──Zydrunas_Ilgauskas/
-      └──Zydrunas_Ilgauskas_0001.jpg
-```
+I repeated the training of **the error set**(epoch & loss ≥ 10) on top of training the CelebA dataset.
 
 ## Result
 
 ![The result of training](https://raw.githubusercontent.com/MarkIvory2973/FaceRecognition/main/imgs/result.png)
+
+## References
+
+1. [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
+
+2. [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385)
