@@ -226,7 +226,7 @@ def Register(camera_id, checkpoints_path, username):
         a_dataset_out.append(a_batch_out)
             
     # 保存人脸向量
-    torch.save(a_dataset_out, f"Users/{username}.pt")
+    torch.save(a_dataset_out, f"users/{username}.pt")
 
 @torch.no_grad()
 def Verify(camera_id, datasets_root, checkpoints_path, username):
@@ -243,7 +243,7 @@ def Verify(camera_id, datasets_root, checkpoints_path, username):
     # 测试
     model.eval()
     # 前向传播
-    a_dataset_out = torch.load(f"Users/{username}.pt", device)
+    a_dataset_out = torch.load(f"users/{username}.pt", device)
     p_dataset_out = [model(p_batch.to(device, non_blocking=True)) for p_batch in p_dataset]
     n_dataset_out = [model(n_batch.to(device, non_blocking=True)) for n_batch in n_dataset]
     losses = []
