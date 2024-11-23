@@ -91,7 +91,7 @@ def Log(text, end="\n"):
 def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_size, gamma):
     # 加载 CelebA、LFW 数据集
     faces_train = Dataset.CelebA(f"{datasets_root}/CelebA", transform_train)
-    faces_test = Dataset.LFW(f"{datasets_root}/LFW_2", transform_test)
+    faces_test = Dataset.LFW(f"{datasets_root}/LFW", transform_test)
     faces_train = DataLoader(faces_train, batch_size, True, pin_memory=True, drop_last=True, num_workers=os.cpu_count())
     faces_test = DataLoader(faces_test, batch_size, False, pin_memory=True, drop_last=True, num_workers=os.cpu_count())
 
@@ -233,7 +233,7 @@ def Register(camera_id, checkpoints_path, username):
 def Verify(camera_id, datasets_root, checkpoints_path, username):
     # 加载人脸数据
     p_dataset = FaceDataset(camera_id, 8, 8)
-    n_dataset = [torch.stack([transform_test(Image.open(negative_face)) for negative_face in random.choices(list(os.scandir(f"{datasets_root}/CelebA_1")), k=8)]) for _ in range(8)]
+    n_dataset = [torch.stack([transform_test(Image.open(negative_face)) for negative_face in random.choices(list(os.scandir(f"{datasets_root}/CelebA")), k=8)]) for _ in range(8)]
     
     model = Network.ResNet18(128).to(device, non_blocking=True)     # ResNet18 模型
     criterion = torch.nn.TripletMarginLoss(0.0, reduction="sum")    # 三元损失
