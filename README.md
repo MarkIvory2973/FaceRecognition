@@ -54,10 +54,10 @@ Train mode:
 |:-|:-:|:-|:-|
 |--datasets-root,-d|✓|-|Datasets root|
 |--checkpoints-root,-c|-|./checkpoints|Checkpoints root|
-|--total-epoch,-e|-|50|Total epoch|
-|--learning-rate,-r|-|0.01|Learning rate|
-|--batch-size,-s|-|8|Batch size|
-|--gamma,-g|-|0.95|The gamma of ExponentialLR|
+|--total-epoch,-e|-|100|Total epoch|
+|--learning-rate,-r|-|0.02|Learning rate|
+|--batch-size,-s|-|16|Batch size|
+|--gamma,-g|-|0.98|The gamma of ExponentialLR|
 
 Register mode:
 
