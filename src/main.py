@@ -46,7 +46,7 @@ def FaceDataset(camera_id, batch_size, total_batch):
     # 获得相机句柄
     camera = cv2.VideoCapture(camera_id)
     # 加载人脸检测模型
-    classifer = cv2.CascadeClassifier("E:\Models\OpenCV\lbpcascades\lbpcascade_frontalface_improved.xml")
+    classifer = cv2.CascadeClassifier("./lbpcascades/lbpcascade_frontalface_improved.xml")
     
     dataset = []
     # 拍摄一个（batch）人脸数据集
