@@ -80,9 +80,11 @@ Verify mode:
 
 I trained 50 epochs using ResNet18 for backbone and repeated the training of **the error set**(epoch & loss ≥ 10) on top of training the CelebA dataset.
 
-## Result
+## Results
 
-![The result of training](https://raw.githubusercontent.com/MarkIvory2973/FaceRecognition/main/imgs/result.png)
+8/27/2024:
+
+![The result of training](https://raw.githubusercontent.com/MarkIvory2973/FaceRecognition/refs/heads/main/imgs/result%20(8-27-2024).png)
 
 ## References
 
