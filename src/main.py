@@ -45,8 +45,6 @@ def FaceDataset(camera_id, batch_size, total_batch):
     
     # 获得相机句柄
     camera = cv2.VideoCapture(camera_id)
-    # 加载人脸检测模型
-    classifer = cv2.CascadeClassifier("./lbpcascades/lbpcascade_frontalface_improved.xml")
     
     dataset = []
     # 拍摄一个（batch）人脸数据集
@@ -60,15 +58,11 @@ def FaceDataset(camera_id, batch_size, total_batch):
             h, w, _ = frame.shape
             a = min(h, w)
             cropped = frame[(h-a)//2:(h+a)//2, (w-a)//2:(w+a)//2]
-            # 转化为灰度图
-            gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             
-            # 检测是否有人脸
-            for _ in classifer.detectMultiScale(gray, 1.3, 4, minSize=(100, 100)):
-                if isCapture:
-                    face = cv2.cvtColor(cropped, cv2.COLOR_BGR2RGB) # 将 BGR 转换为 RGB
-                    face = transform_getfaces(face).unsqueeze(0)    # 图片预处理
-                    batch = torch.cat((batch, face))                # 将张量拼接到 batch
+            if isCapture:
+                face = cv2.cvtColor(cropped, cv2.COLOR_BGR2RGB) # 将 BGR 转换为 RGB
+                face = transform_getfaces(face).unsqueeze(0)    # 图片预处理
+                batch = torch.cat((batch, face))                # 将张量拼接到 batch
                 
             # 显示获取的人脸批数
             cv2.putText(cropped, f"{len(dataset)}/{total_batch}", (10, 50), cv2.QT_FONT_NORMAL, 1, (0, 255, 255))
