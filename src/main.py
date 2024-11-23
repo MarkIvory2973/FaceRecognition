@@ -204,7 +204,7 @@ def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_siz
 @torch.no_grad()
 def Register(camera_id, checkpoints_path, username):
     # 加载人脸数据
-    a_dataset = FaceDataset(camera_id, 8, 8)
+    a_dataset = FaceDataset(camera_id, 16, 8)
     
     model = Network.ResNet18(128).to(device, non_blocking=True)     # ResNet18 模型
     
@@ -226,8 +226,8 @@ def Register(camera_id, checkpoints_path, username):
 @torch.no_grad()
 def Verify(camera_id, datasets_root, checkpoints_path, username):
     # 加载人脸数据
-    p_dataset = FaceDataset(camera_id, 8, 8)
-    n_dataset = [torch.stack([transform_test(Image.open(negative_face)) for negative_face in random.choices(list(os.scandir(f"{datasets_root}/CelebA")), k=8)]) for _ in range(8)]
+    p_dataset = FaceDataset(camera_id, 16, 8)
+    n_dataset = [torch.stack([transform_test(Image.open(negative_face)) for negative_face in random.choices(list(os.scandir(f"{datasets_root}/CelebA")), k=16)]) for _ in range(8)]
     
     model = Network.ResNet18(128).to(device, non_blocking=True)     # ResNet18 模型
     criterion = torch.nn.TripletMarginLoss(0.0, reduction="sum")    # 三元损失
@@ -256,10 +256,10 @@ def main():
 @main.command()
 @option("--datasets-root", "-d", help="Datasets root")
 @option("--checkpoints-root", "-c", default="./checkpoints", help="Checkpoints root")
-@option("--total-epoch", "-e", default=50, help="Total epoch")
-@option("--learning-rate", "-r", default=0.01, help="Learning rate")
-@option("--batch-size", "-s", default=8, help="Batch size")
-@option("--gamma", "-g", default=0.95, help="The gamma of ExponentialLR")
+@option("--total-epoch", "-e", default=100, help="Total epoch")
+@option("--learning-rate", "-r", default=0.02, help="Learning rate")
+@option("--batch-size", "-s", default=16, help="Batch size")
+@option("--gamma", "-g", default=0.98, help="The gamma of ExponentialLR")
 def train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_size, gamma):
     Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_size, gamma)
     
