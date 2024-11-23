@@ -82,6 +82,10 @@ I trained 50 epochs using ResNet18 for backbone and repeated the training of **t
 
 ## Results
 
+11/23/2024:
+
+![The result of training](https://raw.githubusercontent.com/MarkIvory2973/FaceRecognition/refs/heads/main/imgs/result%20(11-23-2024).png)
+
 8/27/2024:
 
 ![The result of training](https://raw.githubusercontent.com/MarkIvory2973/FaceRecognition/refs/heads/main/imgs/result%20(8-27-2024).png)
