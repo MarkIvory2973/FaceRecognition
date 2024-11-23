@@ -215,7 +215,7 @@ def Register(camera_id, checkpoints_path, username):
     model = Network.ResNet18(128).to(device, non_blocking=True)     # ResNet18 模型
     
     # 加载模型权重
-    model.load_state_dict(torch.load(f"{checkpoints_path}/checkpoint.35.pth", device)["Model"])
+    model.load_state_dict(torch.load(f"{checkpoints_path}/checkpoint.best.pth", device)["Model"])
     
     # 测试
     model.eval()
@@ -239,7 +239,7 @@ def Verify(camera_id, datasets_root, checkpoints_path, username):
     criterion = torch.nn.TripletMarginLoss(0.0, reduction="sum")    # 三元损失
         
     # 加载模型权重
-    model.load_state_dict(torch.load(f"{checkpoints_path}/checkpoint.35.pth", device)["Model"])
+    model.load_state_dict(torch.load(f"{checkpoints_path}/checkpoint.best.pth", device)["Model"])
     
     # 测试
     model.eval()
