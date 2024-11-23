@@ -76,20 +76,6 @@ Verify mode:
 |--checkpoints-path,-c|-|./checkpoints|Checkpoints path|
 |--username,-n|✓|-|Username|
 
-## Training
-
-I trained 50 epochs using ResNet18 for backbone and repeated the training of **the error set**(epoch & loss ≥ 10) on top of training the CelebA dataset.
-
-## Results
-
-11/23/2024:
-
-![The result of training](https://raw.githubusercontent.com/MarkIvory2973/FaceRecognition/refs/heads/main/imgs/result%20(11-23-2024).png)
-
-8/27/2024:
-
-![The result of training](https://raw.githubusercontent.com/MarkIvory2973/FaceRecognition/refs/heads/main/imgs/result%20(8-27-2024).png)
-
 ## References
 
 1. [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)

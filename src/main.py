@@ -1,6 +1,6 @@
 import torch_directml, cv2, os
-from ResNet18 import *
-from ResNet18 import Network, Dataset
+from ShuffleNetV2 import *
+from ShuffleNetV2 import Network, Dataset
 from click import group, option
 from rich.console import Console
 
@@ -89,7 +89,7 @@ def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_siz
     faces_train = DataLoader(faces_train, batch_size, True, pin_memory=True, drop_last=True, num_workers=os.cpu_count())
     faces_test = DataLoader(faces_test, batch_size, False, pin_memory=True, drop_last=True, num_workers=os.cpu_count())
 
-    model = Network.ResNet18(128).to(device, non_blocking=True)             # ResNet18 模型
+    model = Network.ShuffleNetV2(128).to(device, non_blocking=True)         # ShuffleNetV2 模型
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)      # Adam 优化器
     criterion = torch.nn.TripletMarginLoss(3.0, reduction="sum")            # 三元损失
     lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma) # 自动学习率
@@ -178,7 +178,7 @@ def Register(camera_id, checkpoints_path, username):
     # 加载人脸数据
     a_dataset = FaceDataset(camera_id, 16, 8)
     
-    model = Network.ResNet18(128).to(device, non_blocking=True)     # ResNet18 模型
+    model = Network.ShuffleNetV2(128).to(device, non_blocking=True)     # ShuffleNetV2 模型
     
     # 加载模型权重
     model.load_state_dict(torch.load(f"{checkpoints_path}/checkpoint.best.pth", device)["Model"])
@@ -201,7 +201,7 @@ def Verify(camera_id, datasets_root, checkpoints_path, username):
     p_dataset = FaceDataset(camera_id, 16, 8)
     n_dataset = [torch.stack([transform_test(Image.open(negative_face)) for negative_face in random.choices(list(os.scandir(f"{datasets_root}/CelebA")), k=16)]) for _ in range(8)]
     
-    model = Network.ResNet18(128).to(device, non_blocking=True)     # ResNet18 模型
+    model = Network.ShuffleNetV2(128).to(device, non_blocking=True) # ShuffleNetV2 模型
     criterion = torch.nn.TripletMarginLoss(0.0, reduction="sum")    # 三元损失
         
     # 加载模型权重
