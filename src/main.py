@@ -96,9 +96,6 @@ def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_siz
 
     # 训练 total_epoch 次
     for epoch in range(total_epoch):
-        # 错误集初始化
-        errors = []
-        
         # 指标初始化（损失值、准确率）
         avg_loss_train = 0
         avg_loss_test = 0
@@ -123,10 +120,6 @@ def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_siz
                 # 脱离计算图
                 loss = loss.detach().item()
                 
-                # 记录错误项
-                if epoch + 1 >= 10 and loss >= 10:
-                    errors.append((anchor, positive, negative))
-                
                 # 指标更新（损失值、准确率）
                 avg_loss_train += (loss-avg_loss_train)/(step+1)  # 实时平均损失值
                 if loss == 0:
@@ -134,27 +127,6 @@ def Train(datasets_root, checkpoints_root, total_epoch, learning_rate, batch_siz
             
             # 指标显示（损失值、准确率）
             Log(f"[{epoch+1}/{total_epoch} {step+1}/{len(faces_train)}] [Train CelebA] AvgLoss: {avg_loss_train} Loss: {loss} Accuracy: {accuracy_train}", "\r")
-            
-        # 训练错误集
-        random.shuffle(errors)
-        for step, (anchor, positive, negative) in enumerate(errors):
-            # 前向传播
-            anchor_out = model(anchor.to(device, non_blocking=True))
-            positive_out = model(positive.to(device, non_blocking=True))
-            negative_out = model(negative.to(device, non_blocking=True))
-            loss = criterion(anchor_out, positive_out, negative_out)
-            
-            # 反向传播
-            optimizer.zero_grad()   # 清空上一步的梯度值
-            loss.backward()         # 求权重、偏置值的偏导数
-            optimizer.step()        # 应用偏导数
-            
-            with torch.no_grad():
-                # 脱离计算图
-                loss = loss.detach().item()
-            
-            # 指标显示（损失值）
-            Log(f"[{epoch+1}/{total_epoch} {step+1}/{len(errors)}] [Train Errors] Loss: {loss}", "\r")
         
         # 测试 LFW 数据集
         model.eval()
