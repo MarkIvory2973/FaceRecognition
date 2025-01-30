@@ -4,24 +4,25 @@ Face recognition in PyTorch.
 
 ## Installation
 
-Use Python 3.10:
+Create an environment (Python **3.10**):
 
 ```bash
 conda create -n FaceRecognition python=3.10
 ```
 
+Install dependencies:
+
 - For CPU:
 
   ```bash
-  pip install torch torchvison
+  pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
   ```
 
-- For AMD GPU:
+- For AMD GPU (for **Windows** users):
 
   ```bash
-  pip install torch==2.3.1 torchvision
-  pip install torch-directml
-  pip install numpy<2
+  pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+  pip3 install torch-directml
   ```
 
 - For NVIDIA GPU:
@@ -30,10 +31,13 @@ conda create -n FaceRecognition python=3.10
   pip install torch torchvision --index-url https://download.pytorch.org/whl/cuxxx
   ```
 
-Then:
-
 ```bash
 pip install opencv-python rich
+```
+
+Clone this repository:
+
+```bash
 git clone https://github.com/MarkIvory2973/ProxyTest.git
 ```
 
@@ -75,6 +79,16 @@ Verify mode:
 |--datasets-root,-d|✓|-|Datasets root|
 |--checkpoints-path,-c|-|./checkpoints|Checkpoints path|
 |--username,-n|✓|-|Username|
+
+## Result
+
+⚠ The metrics in `checkpoint.N.pth` are based on the output of **each 16 batch**, so their `Accuracy` may be not correct enough (**lower than actual**).
+
+I tested again with `batch_size=1`. Here is the result of `checkpoint.best.pth` (`checkpoint.100.pth`):
+
+||Accuracy (%)|
+|:-:|-:|
+|LFW|94.03|
 
 ## References
 
